@@ -1,4 +1,26 @@
-[
-  { "ticker": "AAPL", "volume": "150,000", "price": "$190.20", "time": "15:45" },
-  { "ticker": "TSLA", "volume": "85,000", "price": "$175.50", "time": "16:00" }
-]
+function updateStockData() {
+  var apiKey = "ABF62YQ2EP56EXH7";
+  var symbols = ["AAPL", "TSLA", "NVDA", "MSFT", "AMD"]; // List your 200 tickers here
+  var results = [];
+
+  symbols.forEach(function(symbol) {
+    var url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" + symbol + "&apikey=" + apiKey;
+    var response = UrlFetchApp.fetch(url);
+    var json = JSON.parse(response.getContentText());
+    
+    // Extract data from Alpha Vantage format
+    var quote = json["Global Quote"];
+    if (quote) {
+      results.push({
+        ticker: quote["01. symbol"],
+        price: quote["05. price"],
+        volume: quote["06. volume"],
+        time: quote["07. latest trading day"]
+      });
+    }
+  });
+
+  // Now, push this 'results' array to your GitHub repository
+  // Use GitHub REST API to update stocks.json file content
+  updateGitHubFile(results);
+}
