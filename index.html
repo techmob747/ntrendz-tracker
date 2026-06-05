@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NTrendz Block Trade Tracker</title>
+    <style>
+        body { background-color: #0d1117; color: #c9d1d9; font-family: sans-serif; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border: 1px solid #30363d; text-align: left; }
+        th { background-color: #161b22; color: #58a6ff; }
+        .header { text-align: center; border-bottom: 2px solid #30363d; padding-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Institutional Block Tracker</h1>
+        <p>Daily Institutional Print (EOD Report)</p>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Ticker</th>
+                <th>Volume</th>
+                <th>Price</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody id="data-body">
+            <tr>
+                <td colspan="4" style="text-align:center;">Data loading...</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
