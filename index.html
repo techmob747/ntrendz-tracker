@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <title>Stock Tracker</title>
     <style>
         body { font-family: sans-serif; padding: 20px; background: #fff; }
-        #searchBox { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ccc; }
+        /* The search box must have the id="searchBox" */
+        #searchBox { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 4px; }
         table { width: 100%; border-collapse: collapse; }
         th { background: #f4f4f4; padding: 10px; text-align: left; }
         td { padding: 10px; border-bottom: 1px solid #eee; }
@@ -15,41 +18,45 @@
 
     <table id="stockTable">
         <thead><tr><th>Ticker</th><th>Volume</th><th>Price</th><th>Time</th></tr></thead>
-        <tbody id="data-body"><tr><td colspan="4">Loading data...</td></tr></tbody>
+        <tbody id="data-body"><tr><td colspan="4">Loading...</td></tr></tbody>
     </table>
 
     <script>
         let allStocks = [];
 
-        // 1. Fetch the JSON file
+        // 1. Fetch data
         fetch('stocks.json')
-            .then(response => {
-                if (!response.ok) throw new Error("Could not find stocks.json");
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 allStocks = data;
                 renderTable(allStocks.slice(0, 15));
             })
             .catch(err => {
-                console.error(err);
-                document.getElementById('data-body').innerHTML = "<tr><td colspan='4'>Error: Could not load data.</td></tr>";
+                document.getElementById('data-body').innerHTML = "<tr><td colspan='4'>Error loading JSON.</td></tr>";
             });
 
-        // 2. Render function
+        // 2. Render helper
         function renderTable(data) {
             const body = document.getElementById('data-body');
+            if (data.length === 0) {
+                body.innerHTML = "<tr><td colspan='4'>No results found.</td></tr>";
+                return;
+            }
             body.innerHTML = data.map(row => 
                 `<tr><td>${row.ticker}</td><td>${row.volume}</td><td>${row.price}</td><td>${row.time}</td></tr>`
             ).join("");
         }
 
-        // 3. Search function
+        // 3. THE SEARCH LOGIC
         function filterTable() {
+            // Get the value and make it uppercase
             const input = document.getElementById("searchBox").value.toUpperCase();
+            
+            // If empty, show first 15
             if (input === "") {
                 renderTable(allStocks.slice(0, 15));
             } else {
+                // Filter the array based on ticker match
                 const filtered = allStocks.filter(s => s.ticker.toUpperCase().includes(input));
                 renderTable(filtered);
             }
