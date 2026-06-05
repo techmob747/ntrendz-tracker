@@ -1,20 +1,4 @@
 [
-  {
-    "ticker": "AAPL",
-    "volume": "150,000",
-    "price": "$190.20",
-    "time": "15:45"
-  },
-  {
-    "ticker": "TSLA",
-    "volume": "85,000",
-    "price": "$175.50",
-    "time": "16:00"
-  },
-  {
-    "ticker": "NVDA",
-    "volume": "210,000",
-    "price": "$1,150.00",
-    "time": "16:05"
-  }
+  { "ticker": "AAPL", "volume": "150,000", "price": "$190.20", "time": "15:45" },
+  { "ticker": "TSLA", "volume": "85,000", "price": "$175.50", "time": "16:00" }
 ]
