@@ -1,4 +1,71 @@
-<!DOCTYPE html><html><body><table border="1">
-    <tr><th>Ticker</th><th>Volume</th><th>Price</th><th>Time</th></tr>
-    <tr><td>AAPL</td><td>150,000</td><td>$190.20</td><td>15:45</td></tr><tr><td>TSLA</td><td>85,000</td><td>$175.50</td><td>16:00</td></tr>
-    </table></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stock Tracker</title>
+    <style>
+        body { font-family: sans-serif; background-color: #ffffff; padding: 20px; }
+        #searchBox { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 4px; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background-color: #f4f4f4; padding: 12px; text-align: left; border-bottom: 2px solid #ddd; }
+        td { padding: 10px; border-bottom: 1px solid #eee; }
+        .footer-note { font-size: 10px; color: #777; margin-top: 20px; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <input type="text" id="searchBox" onkeyup="filterTable()" placeholder="Search US Stocks (e.g. AAPL)...">
+
+    <table id="stockTable">
+        <thead>
+            <tr><th>Ticker</th><th>Volume</th><th>Price</th><th>Time</th></tr>
+        </thead>
+        <tbody id="data-body">
+            <tr><td colspan="4">Loading data...</td></tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        OTC Transparency data is provided via http://www.finra.org/industry/OTC-Transparency and is copyrighted by FINRA 2026.
+    </div>
+
+    <script>
+        let allStocks = [];
+
+        // 1. FETCH the data when the page loads
+        fetch('stocks.json')
+            .then(response => response.json())
+            .then(data => {
+                allStocks = data;
+                renderTable(allStocks.slice(0, 15)); // Default: Show first 15
+            })
+            .catch(error => {
+                document.getElementById('data-body').innerHTML = "<tr><td colspan='4'>Error loading stocks.</td></tr>";
+                console.error('Error:', error);
+            });
+
+        // 2. RENDER the table
+        function renderTable(data) {
+            const body = document.getElementById('data-body');
+            if (data.length === 0) {
+                body.innerHTML = "<tr><td colspan='4'>No stocks found.</td></tr>";
+                return;
+            }
+            body.innerHTML = data.map(row => 
+                `<tr><td>${row.ticker}</td><td>${row.volume}</td><td>${row.price}</td><td>${row.time}</td></tr>`
+            ).join("");
+        }
+
+        // 3. SEARCH/FILTER function
+        function filterTable() {
+            const input = document.getElementById("searchBox").value.toUpperCase();
+            if (input === "") {
+                renderTable(allStocks.slice(0, 15));
+            } else {
+                const filtered = allStocks.filter(stock => stock.ticker.toUpperCase().includes(input));
+                renderTable(filtered);
+            }
+        }
+    </script>
+</body>
+</html>
